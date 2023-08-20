@@ -584,8 +584,13 @@
     "app.submenu.audio.speakerSourceLabel": "Saída de altofalante",
     "app.submenu.audio.streamVolumeLabel": "Volume do fluxo de son",
     "app.submenu.video.title": "Vídeo",
+<<<<<<< HEAD
     "app.submenu.video.videoSourceLabel": "Escolla do vídeo",
     "app.submenu.video.videoOptionLabel": "Escolla a entrada de vídeo",
+=======
+    "app.submenu.video.videoSourceLabel": "Entrada de vídeo",
+    "app.submenu.video.videoOptionLabel": "Escoller a entrada de vídeo",
+>>>>>>> 2885921d764019211eb9f961300de76f3a3c6238
     "app.submenu.video.videoQualityLabel": "Calidade do vídeo",
     "app.submenu.video.qualityOptionLabel": "Escoller a calidade do vídeo",
     "app.submenu.video.participantsCamLabel": "Vista das cámaras web dos participantes",
@@ -800,7 +805,7 @@
     "app.modal.randomUser.title": "Usuario seleccionado ao chou",
     "app.modal.randomUser.who": "Quen será seleccionado…?",
     "app.modal.randomUser.alone": "Só hai un espectador",
-    "app.modal.randomUser.reselect.label": "Selecciona de novo",
+    "app.modal.randomUser.reselect.label": "Volver seleccionar",
     "app.modal.randomUser.ariaLabel.title": "Xanela modal do usuario seleccionado",
     "app.dropdown.close": "Pechar",
     "app.dropdown.list.item.activeLabel": "Activo",
@@ -869,6 +874,7 @@
     "app.toast.meetingMuteOn.label": "Todos os usuarios foron silenciados",
     "app.toast.meetingMuteOnViewers.label": "Todos os espectadores foron silenciados",
     "app.toast.meetingMuteOff.label": "Desactivouse o silencio da xuntanza",
+<<<<<<< HEAD
     "app.toast.wakeLock.offerTitle": "Quere manter activa a pantalla do eu dispositivo durante a xuntanza?",
     "app.toast.wakeLock.offerAccept": "Si!",
     "app.toast.wakeLock.offerDecline": "Agora non",
@@ -878,6 +884,10 @@
     "app.toast.setEmoji.lowerHand": "A súa man foi baixada",
     "app.toast.setEmoji.away": "Vde. definiu o seu estado como ausente",
     "app.toast.setEmoji.notAway": "Vde. retirou o seu estado de ausente",
+=======
+    "app.toast.setEmoji.raiseHand": "Vde. ergueu a man",
+    "app.toast.setEmoji.lowerHand": "A súa man foi baixada",
+>>>>>>> 2885921d764019211eb9f961300de76f3a3c6238
     "app.toast.promotedLabel": "Vde. foi promovido a moderador",
     "app.toast.demotedLabel": "Vde. foi relegado a espectador",
     "app.notification.recordingStart": "A sesión esta a ser gravada",
@@ -1051,7 +1061,11 @@
     "app.video.typeError": "A lista de restricións especificada está baleira ou ten todas as restricións estabelecidas a falso",
     "app.video.notFoundError": "Non se atopou a cámara web. Asegúrese de que estea conectada",
     "app.video.notAllowed": "É necesario conceder permiso para acceder ás cámaras web",
+<<<<<<< HEAD
     "app.video.notSupportedError": "Só é posíbel compartir cámaras web de fontes seguras, asegúrese de que o certificado SSL sexa valido",
+=======
+    "app.video.notSupportedError": "O navegador non é compatible. Ténteo de novo usando un navegador ou dispositivo diferente",
+>>>>>>> 2885921d764019211eb9f961300de76f3a3c6238
     "app.video.notReadableError": "Non foi posíbel obter vídeo da cámara web. Asegúrese de que outro programa non estea a usar a cámara web",
     "app.video.timeoutError": "O navegador non respondeu a tempo.",
     "app.video.genericError": "Produciuse un erro descoñecido co dispositivo (erro {0})",
@@ -1248,9 +1262,16 @@
     "app.debugWindow.form.chatLoggerLabel": "Probar os niveis de rexistro da parola",
     "app.debugWindow.form.button.apply": "Aplicar",
     "app.layout.modal.title": "Deseños",
+<<<<<<< HEAD
     "app.layout.modal.update": "Actualizar",
     "app.layout.modal.updateAll": "Actualizar a todos",
     "app.layout.modal.layoutLabel": "Seleccione o seu deseño",
+=======
+    "app.layout.modal.confirm": "Confirmar",
+    "app.layout.modal.cancel": "Cancelar",
+    "app.layout.modal.layoutLabel": "Seleccione o seu deseño",
+    "app.layout.modal.keepPushingLayoutLabel": "Aplicar o deseño para todos",
+>>>>>>> 2885921d764019211eb9f961300de76f3a3c6238
     "app.layout.modal.pushLayoutLabel": "Aplicar para todos",
     "app.layout.modal.layoutToastLabel": "Cambiaron os axustes de deseño",
     "app.layout.modal.layoutSingular": "Deseño",

@@ -18,7 +18,10 @@ import PanToolInjector from './pan-tool-injector/component';
 import {
   findRemoved, filterInvalidShapes, mapLanguage, sendShapeChanges, usePrevious,
 } from './utils';
+<<<<<<< HEAD
 import { isEqual } from 'radash';
+=======
+>>>>>>> 2885921d764019211eb9f961300de76f3a3c6238
 
 const SMALL_HEIGHT = 435;
 const SMALLEST_DOCK_HEIGHT = 475;
