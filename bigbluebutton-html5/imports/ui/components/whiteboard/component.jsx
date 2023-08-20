@@ -746,7 +746,6 @@ export default function Whiteboard(props) {
       menu.style.position = 'relative'
       menu.style.height = presentationMenuHeight
       menu.setAttribute('id', 'TD-Styles-Parent')
-
       ;[...menu.children]
         .sort((a, b) => (a?.id > b?.id ? -1 : 1))
         .forEach((n) => menu.appendChild(n))
