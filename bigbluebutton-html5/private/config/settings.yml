@@ -59,7 +59,7 @@ public:
     # the default logoutUrl matches window.location.origin i.e. bigbluebutton.org for demo.bigbluebutton.org
     # in some cases we want only custom logoutUrl to be used when provided on meeting create. Default value: true
     askForConfirmationOnLeave: true
-    wakeLock: 
+    wakeLock:
       enabled: true
     allowDefaultLogoutUrl: true
     allowUserLookup: false
@@ -95,13 +95,13 @@ public:
       provider: webspeech
       language:
         available:
-        # - de-DE
+          # - de-DE
           - en-US
           - es-ES
           - fr-FR
-        # - hi-ID
-        # - it-IT
-        # - ja-JP
+          # - hi-ID
+          # - it-IT
+          # - ja-JP
           - pt-BR
         # - ru-RU
         # - zh-CN
@@ -122,7 +122,7 @@ public:
       threshold: -50
       duration: 4000
     remainingTimeThreshold: 30
-    remainingTimeAlertThresholdArray: [1,5]
+    remainingTimeAlertThresholdArray: [1, 5]
     enableDebugWindow: true
     # Warning: increasing the limit of breakout rooms per meeting
     # can generate excessive overhead to the server. We recommend
@@ -281,7 +281,7 @@ public:
   externalVideoPlayer:
     enabled: true
   kurento:
-    wsUrl: HOST
+    wsUrl: wss://newsoftylines-bbb.mobc.tech/bbb-webrtc-sfu
     cameraWsOptions:
       # Valid for video-provider. Time (ms) before its WS connection times out
       # and tries to reconnect.
@@ -551,9 +551,9 @@ public:
     music:
       enabled: false
       volume: 0.4
-      track1: "RelaxingMusic"
-      track2: "CalmMusic"
-      track3: "aristocratDrums"
+      track1: 'RelaxingMusic'
+      track2: 'CalmMusic'
+      track3: 'aristocratDrums'
     interval:
       clock: 100
       offset: 60000
