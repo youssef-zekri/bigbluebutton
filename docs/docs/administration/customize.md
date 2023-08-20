@@ -37,7 +37,7 @@ source /etc/bigbluebutton/bbb-conf/apply-lib.sh
 enableUFWRules
 
 echo " - Disable screen sharing"
-yq w -i $HTML5_CONFIG public.kurento.enableScreensharing false
+yq e -i $HTML5_CONFIG public.kurento.enableScreensharing false
 chown meteor:meteor $HTML5_CONFIG
 ```
 
@@ -455,7 +455,7 @@ To do this automatically between package upgrades and restarts of BigBlueButton,
 
 ```bash
 echo " - Disable webcams"
-yq w -i $HTML5_CONFIG public.kurento.enableVideo false
+yq e -i '.public.kurento.enableVideo = false' $HTML5_CONFIG
 chown meteor:meteor $HTML5_CONFIG
 ```
 
@@ -469,7 +469,7 @@ To do this automatically between package upgrades and restarts of BigBlueButton,
 
 ```bash
 echo " - Disable screen sharing"
-yq w -i $HTML5_CONFIG public.kurento.enableScreensharing false
+yq e -i '.public.kurento.enableScreensharing = false' $HTML5_CONFIG 
 chown meteor:meteor $HTML5_CONFIG
 ```
 
@@ -481,15 +481,15 @@ To do this automatically between package upgrades and restarts of BigBlueButton,
 
 ```bash
 echo "  - Setting camera defaults"
-yq w -i $HTML5_CONFIG 'public.kurento.cameraProfiles.(id==low).bitrate' 50
-yq w -i $HTML5_CONFIG 'public.kurento.cameraProfiles.(id==medium).bitrate' 100
-yq w -i $HTML5_CONFIG 'public.kurento.cameraProfiles.(id==high).bitrate' 200
-yq w -i $HTML5_CONFIG 'public.kurento.cameraProfiles.(id==hd).bitrate' 300
+yq e -i '.public.kurento.cameraProfiles.(id==low).bitrate = 50' $HTML5_CONFIG 
+yq e -i '.public.kurento.cameraProfiles.(id==medium).bitrate = 100' $HTML5_CONFIG 
+yq e -i '.public.kurento.cameraProfiles.(id==high).bitrate = 200' $HTML5_CONFIG 
+yq e -i '.public.kurento.cameraProfiles.(id==hd).bitrate = 300' $HTML5_CONFIG 
 
-yq w -i $HTML5_CONFIG 'public.kurento.cameraProfiles.(id==low).default' true
-yq w -i $HTML5_CONFIG 'public.kurento.cameraProfiles.(id==medium).default' false
-yq w -i $HTML5_CONFIG 'public.kurento.cameraProfiles.(id==high).default' false
-yq w -i $HTML5_CONFIG 'public.kurento.cameraProfiles.(id==hd).default' false
+yq e -i '.public.kurento.cameraProfiles.(id==low).default = true' $HTML5_CONFIG 
+yq e -i '.public.kurento.cameraProfiles.(id==medium).default = false' $HTML5_CONFIG 
+yq e -i '.public.kurento.cameraProfiles.(id==high).default = false' $HTML5_CONFIG 
+yq e -i '.public.kurento.cameraProfiles.(id==hd).default = false' $HTML5_CONFIG 
 chown meteor:meteor $HTML5_CONFIG
 ```
 
@@ -1192,9 +1192,22 @@ You can see the list of languages installed with BigBlueButton in the directory 
 
 #### Change favicon
 
+First method:
+
 To change the favicon, overwrite the file `/var/www/bigbluebutton-default/assets/favicon.ico`.
 
 You'll need to update file each time the `bbb-config` package updates.
+
+Second method:
+
+Create a custom directory under `/var/www/bigbluebutton-default/` like `/var/www/bigbluebutton-default/site` and copy your favicon.ico into this directory. Add a new file `favicon.nginx` to `/etc/bigbluebutton/nginx` and add the following lines:
+
+```
+location = /favicon.ico {
+    alias /var/www/bigbluebutton-default/site/favicon.ico;
+```
+
+After a restart of nginx, your customized favicon.ico will be delivered. This change will affect BigBlueButton and Greenlight and will persist during updates.
 
 #### Change title in the HTML5 client
 
@@ -1213,7 +1226,7 @@ You'll need to update this entry each time the package `bbb-html5` updates. The 
 
 ```bash
 $ TARGET=/usr/share/meteor/bundle/programs/server/assets/app/config/settings.yml
-$ yq w -i $TARGET public.app.clientTitle "New Title"
+$ yq e -i ".public.app.clientTitle = \"New Title\"" $TARGET
 $ chown meteor:meteor $TARGET
 ```
 
@@ -1391,6 +1404,9 @@ Useful tools for development:
 | `userdata-bbb_skip_video_preview=`               | If set to `true`, the user will not see a preview of their webcam before sharing it                                                                                                                                                                                                                                                     | `false`       |
 | `userdata-bbb_skip_video_preview_on_first_join=` | (Introduced in BigBlueButton 2.3) If set to `true`, the user will not see a preview of their webcam before sharing it when sharing for the first time in the session. If the user stops sharing, next time they try to share webcam the video preview will be displayed, allowing for configuration changes to be made prior to sharing | `false`       |
 | `userdata-bbb_mirror_own_webcam=`                | If set to `true`, the client will see a mirrored version of their webcam. Doesn't affect the incoming video stream for other users.                                                                                                                                                                                                     | `false`       |
+| `userdata-bbb_fullaudio_bridge=`                 | Specifies the audio bridge to be used in the client. Supported values: `sipjs`, `fullaudio`.                                                                                       | `fullaudio`   |
+| `userdata-bbb_transparent_listen_only=`          | If set to `true`, the experimental "transparent listen only" audio mode will be used                                                                                                                                                                                                                                                    | `false`       |
+
 
 #### Presentation parameters
 
@@ -1480,9 +1496,9 @@ PROTOCOL=$(cat /etc/bigbluebutton/bbb-web.properties | grep -v '#' | grep '^bigb
 
 apt-get install -y nginx-full
 
-yq w -i $HTML5_CONFIG public.clientLog.external.enabled true
-yq w -i $HTML5_CONFIG public.clientLog.external.url     "$PROTOCOL://$HOST/html5log"
-yq w -i $HTML5_CONFIG public.app.askForFeedbackOnLogout true
+yq e -i '.public.clientLog.external.enabled = true' $HTML5_CONFIG
+yq e -i ".public.clientLog.external.url = \"$PROTOCOL://$HOST/html5log\"" $HTML5_CONFIG
+yq e -i '.public.app.askForFeedbackOnLogout = true' $HTML5_CONFIG
 chown meteor:meteor $HTML5_CONFIG
 
 mkdir -p /etc/bigbluebutton/nginx/

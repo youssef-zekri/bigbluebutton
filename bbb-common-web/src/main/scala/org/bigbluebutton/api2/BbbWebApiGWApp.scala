@@ -3,12 +3,12 @@ package org.bigbluebutton.api2
 import scala.collection.JavaConverters._
 import akka.actor.ActorSystem
 import akka.event.Logging
-import org.bigbluebutton.api.domain.{ BreakoutRoomsParams, Group, LockSettingsParams }
+import org.bigbluebutton.api.domain.{BreakoutRoomsParams, Group, LockSettingsParams}
 import org.bigbluebutton.api.messaging.converters.messages._
 import org.bigbluebutton.api2.bus._
 import org.bigbluebutton.api2.endpoint.redis.WebRedisSubscriberActor
 import org.bigbluebutton.common2.redis.MessageSender
-import org.bigbluebutton.api2.meeting.{ OldMeetingMsgHdlrActor, RegisterUser }
+import org.bigbluebutton.api2.meeting.{OldMeetingMsgHdlrActor, RegisterUser}
 import org.bigbluebutton.common2.domain._
 import org.bigbluebutton.common2.util.JsonUtil
 import org.bigbluebutton.presentation.messages._
@@ -224,7 +224,8 @@ class BbbWebApiGWApp(
       hideUserList = lockSettingsParams.hideUserList.booleanValue(),
       lockOnJoin = lockSettingsParams.lockOnJoin.booleanValue(),
       lockOnJoinConfigurable = lockSettingsParams.lockOnJoinConfigurable.booleanValue(),
-      hideViewersCursor = lockSettingsParams.hideViewersCursor.booleanValue()
+      hideViewersCursor = lockSettingsParams.hideViewersCursor.booleanValue(),
+      hideViewersAnnotation = lockSettingsParams.hideViewersAnnotation.booleanValue()
     )
 
     val systemProps = SystemProps(
@@ -256,18 +257,19 @@ class BbbWebApiGWApp(
   }
 
   def registerUser(meetingId: String, intUserId: String, name: String,
-                   role: String, extUserId: String, authToken: String, avatarURL: String,
-                   guest: java.lang.Boolean, authed: java.lang.Boolean,
-                   guestStatus: String, excludeFromDashboard: java.lang.Boolean): Unit = {
+                   role: String, extUserId: String, authToken: String, sessionToken: String,
+                   avatarURL: String, guest: java.lang.Boolean, authed: java.lang.Boolean,
+                   guestStatus: String, excludeFromDashboard: java.lang.Boolean,
+                   customParameters: java.util.Map[String, String]): Unit = {
 
     //    meetingManagerActorRef ! new RegisterUser(meetingId = meetingId, intUserId = intUserId, name = name,
     //      role = role, extUserId = extUserId, authToken = authToken, avatarURL = avatarURL,
     //     guest = guest, authed = authed)
 
     val regUser = new RegisterUser(meetingId = meetingId, intUserId = intUserId, name = name,
-      role = role, extUserId = extUserId, authToken = authToken, avatarURL = avatarURL,
-      guest = guest.booleanValue(), authed = authed.booleanValue(), guestStatus = guestStatus,
-      excludeFromDashboard = excludeFromDashboard)
+      role = role, extUserId = extUserId, authToken = authToken, sessionToken = sessionToken,
+      avatarURL = avatarURL, guest = guest.booleanValue(), authed = authed.booleanValue(),
+      guestStatus = guestStatus, excludeFromDashboard = excludeFromDashboard, customParameters = (customParameters).asScala.toMap)
 
     val event = MsgBuilder.buildRegisterUserRequestToAkkaApps(regUser)
     msgToAkkaAppsEventBus.publish(MsgToAkkaApps(toAkkaAppsChannel, event))

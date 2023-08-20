@@ -47,11 +47,14 @@ export default async function addPresentation(meetingId, podId, presentation) {
         yOffset: Number,
         widthRatio: Number,
         heightRatio: Number,
+        width: Number,
+        height: Number,
       },
     ],
     downloadable: Boolean,
     removable: Boolean,
     isInitialPresentation: Boolean,
+    filenameConverted: String,
   });
 
   const selector = {
@@ -61,17 +64,18 @@ export default async function addPresentation(meetingId, podId, presentation) {
   };
 
   const modifier = {
-    $set: Object.assign({
+    $set: {
       meetingId,
       podId,
       'conversion.done': true,
       'conversion.error': false,
       'exportation.status': null,
-    }, flat(presentation, { safe: true })),
+      ...flat(presentation, { safe: true }),
+    },
   };
 
   try {
-    const { insertedId } = await Presentations.upsertAsync(selector, modifier);
+    await Presentations.upsertAsync(selector, modifier);
 
     await addSlides(meetingId, podId, presentation.id, presentation.pages);
 

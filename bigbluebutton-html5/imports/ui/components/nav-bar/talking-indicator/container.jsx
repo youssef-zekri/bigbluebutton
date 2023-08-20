@@ -2,13 +2,14 @@ import React, { useContext } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import VoiceUsers from '/imports/api/voice-users';
 import Auth from '/imports/ui/services/auth';
-import { debounce } from 'lodash';
+import { debounce } from '/imports/utils/debounce';
 import TalkingIndicator from './component';
 import { makeCall } from '/imports/ui/services/api';
 import { meetingIsBreakout } from '/imports/ui/components/app/service';
 import { layoutSelectInput, layoutDispatch } from '../../layout/context';
 import SpeechService from '/imports/ui/components/audio/captions/speech/service';
 import { UsersContext } from '/imports/ui/components/components-data/users-context/context';
+import TalkingIndicatorContainerGraphql from '../nav-bar-graphql/talking-indicator/component';
 
 const APP_CONFIG = Meteor.settings.public.app;
 const { enableTalkingIndicator } = APP_CONFIG;
@@ -40,34 +41,34 @@ const TalkingIndicatorContainer = (props) => {
   );
 };
 
-export default withTracker(() => {
+withTracker(() => {
   const talkers = {};
   const meetingId = Auth.meetingID;
-  const usersTalking = VoiceUsers.find({ meetingId, joined: true, spoke: true }, {
-    fields: {
-      callerName: 1,
-      talking: 1,
-      floor: 1,
-      color: 1,
-      startTime: 1,
-      muted: 1,
-      intId: 1,
-    },
-    sort: {
-      startTime: 1,
-    },
-    limit: TALKING_INDICATORS_MAX + 1,
-  }).fetch();
+  const usersTalking = VoiceUsers.find(
+    { meetingId, joined: true, spoke: true },
+    {
+      fields: {
+        callerName: 1,
+        talking: 1,
+        floor: 1,
+        color: 1,
+        startTime: 1,
+        muted: 1,
+        intId: 1,
+      },
+      sort: {
+        startTime: 1,
+      },
+      limit: TALKING_INDICATORS_MAX + 1,
+    }
+  ).fetch();
 
   if (usersTalking) {
-    const maxNumberVoiceUsersNotification = usersTalking.length < TALKING_INDICATORS_MAX
-      ? usersTalking.length
-      : TALKING_INDICATORS_MAX;
+    const maxNumberVoiceUsersNotification =
+      usersTalking.length < TALKING_INDICATORS_MAX ? usersTalking.length : TALKING_INDICATORS_MAX;
 
     for (let i = 0; i < maxNumberVoiceUsersNotification; i += 1) {
-      const {
-        callerName, talking, floor, color, muted, intId,
-      } = usersTalking[i];
+      const { callerName, talking, floor, color, muted, intId } = usersTalking[i];
 
       talkers[`${intId}`] = {
         color,
@@ -97,3 +98,5 @@ export default withTracker(() => {
     moreThanMaxIndicators: usersTalking.length > TALKING_INDICATORS_MAX,
   };
 })(TalkingIndicatorContainer);
+
+export default TalkingIndicatorContainerGraphql;

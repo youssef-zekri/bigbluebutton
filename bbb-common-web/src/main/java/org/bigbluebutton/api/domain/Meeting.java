@@ -27,10 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.RandomStringUtils;
 
 public class Meeting {
 
@@ -823,8 +820,8 @@ public class Meeting {
     	this.meetingEndedCallbackURL = meetingEndedCallbackURL;
     }
 
-	public Map<String, Object> getUserCustomData(String userID){
-		return (Map<String, Object>) userCustomData.get(userID);
+	public Map<String, String> getUserCustomData(String userID){
+		return (Map<String, String>) userCustomData.get(userID);
 	}
 
 	public void userRegistered(RegisteredUser user) {

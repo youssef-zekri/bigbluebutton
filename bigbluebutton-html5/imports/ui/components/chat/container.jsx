@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { withTracker } from 'meteor/react-meteor-data';
-import _ from 'lodash';
+import { throttle } from '/imports/utils/throttle';
 import Auth from '/imports/ui/services/auth';
 import Storage from '/imports/ui/services/storage/session';
 import { meetingIsBreakout } from '/imports/ui/components/app/service';
@@ -10,10 +10,12 @@ import { GroupChatContext } from '../components-data/group-chat-context/context'
 import { UsersContext } from '../components-data/users-context/context';
 import ChatLogger from '/imports/ui/components/chat/chat-logger/ChatLogger';
 import lockContextContainer from '/imports/ui/components/lock-viewers/context/container';
-import Chat from '/imports/ui/components/chat/component';
+// import Chat from '/imports/ui/components/chat/component';
 import ChatService from './service';
 import { layoutSelect, layoutDispatch } from '../layout/context';
 import { escapeHtml } from '/imports/utils/string-utils';
+
+import Chat from './chat-graphql/component';
 
 const CHAT_CONFIG = Meteor.settings.public.chat;
 const PUBLIC_CHAT_KEY = CHAT_CONFIG.public_id;
@@ -58,7 +60,7 @@ let prevPartnerIsLoggedOut = false;
 
 let globalAppplyStateToProps = () => { };
 
-const throttledFunc = _.throttle(() => {
+const throttledFunc = throttle(() => {
   globalAppplyStateToProps();
 }, DEBOUNCE_TIME, { trailing: true, leading: true });
 
@@ -249,7 +251,7 @@ const ChatContainer = (props) => {
   );
 };
 
-export default lockContextContainer(injectIntl(withTracker(({ intl, userLocks }) => {
+lockContextContainer(injectIntl(withTracker(({ intl, userLocks }) => {
   const isChatLockedPublic = userLocks.userPublicChat;
   const isChatLockedPrivate = userLocks.userPrivateChat;
 
@@ -267,3 +269,5 @@ export default lockContextContainer(injectIntl(withTracker(({ intl, userLocks })
     },
   };
 })(ChatContainer)));
+
+export default Chat;

@@ -6,6 +6,11 @@ import org.bigbluebutton.common2.domain.{ DefaultProps, PageVO, PresentationPage
 import org.bigbluebutton.common2.msgs._
 import org.bigbluebutton.presentation.messages._
 
+import java.io.IOException
+import java.net.URL
+import javax.imageio.ImageIO
+import scala.xml.XML
+
 object MsgBuilder {
   def buildDestroyMeetingSysCmdMsg(msg: DestroyMeetingMessage): BbbCommonEnvCoreMsg = {
     val routing = collection.immutable.HashMap("sender" -> "bbb-web")
@@ -39,9 +44,9 @@ object MsgBuilder {
     val envelope = BbbCoreEnvelope(RegisterUserReqMsg.NAME, routing)
     val header = BbbCoreHeaderWithMeetingId(RegisterUserReqMsg.NAME, msg.meetingId)
     val body = RegisterUserReqMsgBody(meetingId = msg.meetingId, intUserId = msg.intUserId,
-      name = msg.name, role = msg.role, extUserId = msg.extUserId, authToken = msg.authToken,
+      name = msg.name, role = msg.role, extUserId = msg.extUserId, authToken = msg.authToken, sessionToken = msg.sessionToken,
       avatarURL = msg.avatarURL, guest = msg.guest, authed = msg.authed, guestStatus = msg.guestStatus,
-      excludeFromDashboard = msg.excludeFromDashboard)
+      excludeFromDashboard = msg.excludeFromDashboard, customParameters = msg.customParameters)
     val req = RegisterUserReqMsg(header, body)
     BbbCommonEnvCoreMsg(envelope, req)
   }
@@ -74,13 +79,35 @@ object MsgBuilder {
     val pngUrl = presBaseUrl + "/png/" + page
 
     val urls = Map("thumb" -> thumbUrl, "text" -> txtUrl, "svg" -> svgUrl, "png" -> pngUrl)
+    
+    try {
+      val imgUrl = new URL(svgUrl)
+      val imgContent = XML.load(imgUrl)
 
-    PresentationPageConvertedVO(
-      id = id,
-      num = page,
-      urls = urls,
-      current = current
-    )
+      val w = (imgContent \ "@width").text.replaceAll("[^\\d]", "")
+      val h = (imgContent \ "@height").text.replaceAll("[^\\d]", "")
+
+      val width = w.toInt
+      val height = h.toInt
+
+      PresentationPageConvertedVO(
+        id = id,
+        num = page,
+        urls = urls,
+        current = current,
+        width = width,
+        height = height
+      )
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+        PresentationPageConvertedVO(
+          id = id,
+          num = page,
+          urls = urls,
+          current = current
+        )
+    }
   }
 
   def buildPresentationPageConvertedSysMsg(msg: DocPageGeneratedProgress): BbbCommonEnvCoreMsg = {
@@ -148,8 +175,9 @@ object MsgBuilder {
 
     val pages = generatePresentationPages(msg.presId, msg.numPages.intValue(), msg.presBaseUrl)
     val presentation = PresentationVO(msg.presId, msg.temporaryPresentationId, msg.filename,
-      current = msg.current.booleanValue(), pages.values.toVector, msg.downloadable.booleanValue(), msg.removable.booleanValue(),
-      isInitialPresentation = msg.isInitialPresentation)
+      current = msg.current.booleanValue(), pages.values.toVector, msg.downloadable.booleanValue(),
+      msg.removable.booleanValue(),
+      isInitialPresentation = msg.isInitialPresentation, msg.filenameConverted)
 
     val body = PresentationConversionCompletedSysPubMsgBody(podId = msg.podId, messageKey = msg.key,
       code = msg.key, presentation)

@@ -35,6 +35,16 @@ const config = {
                 docs: {
                     routeBasePath: "/",
                     sidebarPath: require.resolve('./sidebars.js'),
+                    lastVersion: '2.6',
+                    includeCurrentVersion: false,
+                    versions: {
+                        '2.5': {
+                            banner: 'none'
+                        },
+                        '2.6': {
+                            banner: 'none'
+                        },
+                    }
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
@@ -43,7 +53,63 @@ const config = {
         ],
     ],
 
-    plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
+    plugins: [
+        require.resolve("@cmfcmf/docusaurus-search-local"),
+        [
+            "@docusaurus/plugin-client-redirects",
+            {
+                fromExtensions: ['html', 'htm'],
+                redirects: [
+                    {
+                        to: "/new-features",
+                        from: "/2.6/new"
+                    },
+                    {
+                        to: "/new-features",
+                        from: "/2.6/new.html"
+                    },
+                    {
+                        to: "/new-features",
+                        from: "/2.6/new-features"
+                    },
+                    {
+                        to: "/development/api",
+                        from: "/dev/api.html"
+                    },
+                    {
+                        to: "/greenlight/v3/migration",
+                        from: "/greenlight_v3/gl3-migration.html"
+                    }
+                ],
+                // We interpret the path argument as the path "to"
+                // and the return of this function as the paths "from"
+                createRedirects: (path) =>  {
+                    // TODO: remove default route to /
+                    const redirect_list = [];
+
+                    // Create redirect paths for all routes except 2.5 ones
+                    if ( !path.startsWith("/2.5") ){
+                        redirect_list.push("/2.6" + path);
+                    }
+
+                    if ( path.includes("/testing/release-testing") ){
+                        redirect_list.push( path.replace("/testing/release-testing", "/release-tests.html") )
+                    }
+                    // Handle the old docs group /admin
+                    if ( path.startsWith("/administration") ) {
+                        // creates new routes /admin/something pointing to /administration
+                        redirect_list.push( path.replace("/administration", "/admin") );
+                    }
+                    // handle the old docs group /dev
+                    if ( path.startsWith("/development") ) {
+                        // creates new routes /dev/something pointing to /development
+                        redirect_list.push( path.replace("/development", "/dev") );
+                    }
+                    return redirect_list;
+                },
+            }
+        ],
+    ],
 
     themeConfig:
 
@@ -61,17 +127,37 @@ const config = {
                 },
                 items: [
                     {to: 'https://bigbluebutton.org/teachers/tutorials/', label: 'Teaching', position: 'left'},
-                    {to: '/development/guide', label: 'Development', position: 'left'},
-                    {to: '/administration/install', label: 'Administration', position: 'left'},
-                    {to: '/greenlight/v3/install', label: 'Greenlight', position: 'left'},
-                    {to: '/new-features', label: 'New Features', position: 'left'},
+                    {
+                        type: 'doc',
+                        position: 'left',
+                        docId: 'development/guide',
+                        label: 'Development',
+                    },
+                    {
+                        type: 'doc',
+                        position: 'left',
+                        docId: 'administration/install',
+                        label: 'Administration',
+                    },
+                    {
+                        type: 'doc',
+                        position: 'left',
+                        docId: 'greenlight/v3/install',
+                        label: 'Greenlight',
+                    },
+                    {
+                        type: 'doc',
+                        position: 'left',
+                        docId: 'new-features',
+                        label: 'New Features',
+                    },
                     {
                         type: 'docsVersionDropdown',
                         position: 'right',
                         dropdownActiveClassDisabled: true,
                     },
                     {
-                        href: 'https://github.com/bigbluebutton/bigbluebutton/tree/v2.6.x-release/docs',
+                        href: 'https://github.com/bigbluebutton/bigbluebutton/tree/v2.7.x-release/docs',
                         label: 'GitHub',
                         position: 'right',
                     },

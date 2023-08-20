@@ -300,6 +300,10 @@ public class PresentationUrlDownloadService {
         CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom()
                 .setDefaultRequestConfig(requestConfig)
                 .build();
+<<<<<<< HEAD
+
+=======
+>>>>>>> 2885921d764019211eb9f961300de76f3a3c6238
         try {
             httpclient.start();
             File download = new File(filename);
