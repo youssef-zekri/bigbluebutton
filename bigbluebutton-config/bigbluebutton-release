@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 BIGBLUEBUTTON_RELEASE=2.8.0-alpha.1
+=======
+BIGBLUEBUTTON_RELEASE=2.6.11+fixes
+>>>>>>> remotes/origin/v2.6.x-release
