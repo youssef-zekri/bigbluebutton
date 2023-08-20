@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { withTracker } from 'meteor/react-meteor-data';
-import Auth from '/imports/ui/services/auth';
+import React, { useContext } from 'react'
+import { withTracker } from 'meteor/react-meteor-data'
+import Auth from '/imports/ui/services/auth'
 import {
   getSharingContentType,
   getBroadcastContentType,
@@ -8,15 +8,19 @@ import {
   isCameraAsContentGloballyBroadcasting,
   isScreenBroadcasting,
   isCameraAsContentBroadcasting,
-} from './service';
-import ScreenshareComponent from './component';
-import { layoutSelect, layoutSelectOutput, layoutDispatch } from '../layout/context';
-import getFromUserSettings from '/imports/ui/services/users-settings';
-import { UsersContext } from '/imports/ui/components/components-data/users-context/context';
-import AudioService from '/imports/ui/components/audio/service';
-import { shouldEnableVolumeControl } from './service';
-import MediaService from '/imports/ui/components/media/service';
-import { defineMessages } from 'react-intl';
+} from './service'
+import ScreenshareComponent from './component'
+import {
+  layoutSelect,
+  layoutSelectOutput,
+  layoutDispatch,
+} from '../layout/context'
+import getFromUserSettings from '/imports/ui/services/users-settings'
+import { UsersContext } from '/imports/ui/components/components-data/users-context/context'
+import AudioService from '/imports/ui/components/audio/service'
+import { shouldEnableVolumeControl } from './service'
+import MediaService from '/imports/ui/components/media/service'
+import { defineMessages } from 'react-intl'
 
 const screenshareIntlMessages = defineMessages({
   // SCREENSHARE
@@ -49,9 +53,10 @@ const screenshareIntlMessages = defineMessages({
   },
   endedDueToDataSaving: {
     id: 'app.media.screenshare.endDueToDataSaving',
-    description: 'toast to show when a screenshare has ended by changing data savings option',
-  }
-});
+    description:
+      'toast to show when a screenshare has ended by changing data savings option',
+  },
+})
 
 const cameraAsContentIntlMessages = defineMessages({
   // CAMERA AS CONTENT
@@ -84,52 +89,53 @@ const cameraAsContentIntlMessages = defineMessages({
   },
   endedDueToDataSaving: {
     id: 'app.media.cameraAsContent.endDueToDataSaving',
-    description: 'toast to show when camera as content has ended by changing data savings option',
+    description:
+      'toast to show when camera as content has ended by changing data savings option',
   },
-});
-import NotesService from '/imports/ui/components/notes/service';
+})
+import NotesService from '/imports/ui/components/notes/service'
 
 const ScreenshareContainer = (props) => {
-  const screenShare = layoutSelectOutput((i) => i.screenShare);
-  const fullscreen = layoutSelect((i) => i.fullscreen);
-  const layoutContextDispatch = layoutDispatch();
+  console.log('gfrgfreggrt')
+  const screenShare = layoutSelectOutput((i) => i.screenShare)
+  const fullscreen = layoutSelect((i) => i.fullscreen)
+  const layoutContextDispatch = layoutDispatch()
 
-  const { element } = fullscreen;
-  const fullscreenElementId = 'Screenshare';
-  const fullscreenContext = (element === fullscreenElementId);
+  const { element } = fullscreen
+  const fullscreenElementId = 'Screenshare'
+  const fullscreenContext = element === fullscreenElementId
 
-  const usingUsersContext = useContext(UsersContext);
-  const { users } = usingUsersContext;
-  const currentUser = users[Auth.meetingID][Auth.userID];
-  const isPresenter = currentUser.presenter;
+  const usingUsersContext = useContext(UsersContext)
+  const { users } = usingUsersContext
+  const currentUser = users[Auth.meetingID][Auth.userID]
+  const isPresenter = currentUser.presenter
 
   const info = {
     screenshare: {
-      icon: "desktop",
+      icon: 'desktop',
       locales: screenshareIntlMessages,
       startPreviewSizeBig: false,
       showSwitchPreviewSizeButton: true,
     },
     camera: {
-      icon: "video",
+      icon: 'video',
       locales: cameraAsContentIntlMessages,
       startPreviewSizeBig: true,
       showSwitchPreviewSizeButton: false,
     },
-  };
+  }
 
   const getContentType = () => {
-    return isPresenter ? getSharingContentType() : getBroadcastContentType();
+    return isPresenter ? getSharingContentType() : getBroadcastContentType()
   }
-  const contentTypeInfo = info[getContentType()];
-  const defaultInfo = info.camera;
-  const selectedInfo = contentTypeInfo ? contentTypeInfo : defaultInfo;
+  const contentTypeInfo = info[getContentType()]
+  const defaultInfo = info.camera
+  const selectedInfo = contentTypeInfo ? contentTypeInfo : defaultInfo
 
   if (isScreenBroadcasting() || isCameraAsContentBroadcasting()) {
     return (
       <ScreenshareComponent
-        {
-        ...{
+        {...{
           layoutContextDispatch,
           ...props,
           ...screenShare,
@@ -137,24 +143,27 @@ const ScreenshareContainer = (props) => {
           fullscreenElementId,
           isPresenter,
           ...selectedInfo,
-        }
-        }
+        }}
       />
-    );
+    )
   }
-  return null;
-};
+  return null
+}
 
-const LAYOUT_CONFIG = Meteor.settings.public.layout;
+const LAYOUT_CONFIG = Meteor.settings.public.layout
 
 export default withTracker(() => {
   return {
-    isGloballyBroadcasting: isScreenGloballyBroadcasting() || isCameraAsContentGloballyBroadcasting(),
+    isGloballyBroadcasting:
+      isScreenGloballyBroadcasting() || isCameraAsContentGloballyBroadcasting(),
     toggleSwapLayout: MediaService.toggleSwapLayout,
-    hidePresentationOnJoin: getFromUserSettings('bbb_hide_presentation_on_join', LAYOUT_CONFIG.hidePresentationOnJoin),
+    hidePresentationOnJoin: getFromUserSettings(
+      'bbb_hide_presentation_on_join',
+      LAYOUT_CONFIG.hidePresentationOnJoin
+    ),
     enableVolumeControl: shouldEnableVolumeControl(),
     outputDeviceId: AudioService.outputDeviceId(),
     isSharedNotesPinned: MediaService.shouldShowSharedNotes(),
     pinSharedNotes: NotesService.pinSharedNotes,
-  };
-})(ScreenshareContainer);
+  }
+})(ScreenshareContainer)
